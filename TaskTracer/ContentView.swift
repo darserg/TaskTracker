@@ -8,14 +8,34 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State var Tasks =  ["Exam", "Learn SwiftUI" ,"Prepare to write an essay"]
+
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationView {
+            List{
+                ForEach (Tasks, id: \.self) { task in
+                    Text("\(task)")
+                }.onDelete(perform: delete)
+                    .onMove(perform: move)
+            }
+            .navigationBarItems(trailing: EditButton())
+        }.refreshable {
+            insert(element: "")
         }
-        .padding()
+    }
+    
+    func delete(at offsets: IndexSet) {
+        Tasks.remove(atOffsets: offsets)
+    }
+    
+    func move(from source: IndexSet, to destination: Int) {
+        Tasks.move(fromOffsets: source, toOffset: destination)
+    }
+    
+    func insert(element : String) {
+        Tasks.append(element)
     }
 }
 
